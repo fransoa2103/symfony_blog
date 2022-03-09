@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des articles{% endblock %}
+
+{% block body %}
+
+    {%  include 'menu/_menu.html.twig' %}
+
+    <h1>Liste des articles</h1>
+
+    {# filtre date de base #}
+
+    <h3>{{ "now" | date("d/m/Y") }}</h3>
+
+    {# filtre créé avec /TWIG/AppExtension #}
+
+    <h3>{{ articles|longueur }}</h3>
+
+    {# fonction créé avec /TWIG/AppExtension #}
+    <h3>{{ calcul(5,5) }}</h3>
+
+    {# et la placer dans une variable #}
+
+    <h3>{% set result = calcul(3,5)  %}</h3>
+    <p>result = {{ result }}</p>
+
+    <ul>
+        {% for article in articles %}
+            <li><a href="{{ path('vue_article', { 'id':article['id'] }) }}">{{ article['nom'] }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <p>Temperature = {{ test }} °C</p>
+
+{% endblock %}
