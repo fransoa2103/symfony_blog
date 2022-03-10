@@ -8,8 +8,17 @@
 
     {%  include 'menu/_menu.html.twig' %}
 
-    <h5>Article n°{{ article.id }}</h5>
+    <p class="display-1 mb-3">Article n°{{ article.id }}</p>
     <small>posté le: {{ article.createdDate|date('d/m/Y') }}</small>
     <p>{{ article.content }}</p>
+    <div class="row">
+        <h6>Voici les Commentaires</h6>
+        {%  for comment in article.comments %}
+            <div class="col-md-12 border mb-2">
+                <small>Le {{ comment.dateComment | date("d/m/Y") }} par {{ comment.author }}</small>
+                <p>{{ comment.contenu }}</p>
+            </div>
+        {%  endfor %}
+    </div>
 
 {% endblock %}

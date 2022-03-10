@@ -18,11 +18,15 @@ class DefaultController extends AbstractController
      */
     public function listeArticles(ArticleRepository $articleRepository): Response
     {
-        $articles = $articleRepository->findBy
+        $articles = $articleRepository->findAll();
+
+
+        /* $articles = $articleRepository->findBy
         (
             ['titre'        => "article n°1"],
             ['createdDate'  => 'DESC']
         );
+        */
 
         return $this->render('default/index.html.twig',
             [ 'articles' => $articles ]);

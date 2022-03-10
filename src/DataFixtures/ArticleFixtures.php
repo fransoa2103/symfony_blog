@@ -17,9 +17,11 @@ class ArticleFixtures extends Fixture
             $date = new \DateTime();
             $date->modify('-'.$i.' days');
             $article->setCreatedDate($date);
+            // One To Many
+            $this->addReference('article-'.$i, $article);
 
             $manager->persist($article);
-            $manager->flush();
         }
+        $manager->flush();
     }
 }
