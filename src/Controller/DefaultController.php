@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,35 +16,42 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="liste_articles", methods={"GET"})
      */
-    public function listeArticles(): Response
+    public function listeArticles(ArticleRepository $articleRepository): Response
     {
-        $articles = [
-            [
-                'nom' => 'Article 1',
-                'id' => 1
-            ],
-            [
-                'nom' => 'Article 2',
-                'id' => 2
-            ],
-            [
-                'nom' => 'Article 3',
-                'id' => 3
-            ]
-        ];
-
-        $test = 5;
+        $articles = $articleRepository->findBy
+        (
+            ['titre'        => "article n°1"],
+            ['createdDate'  => 'DESC']
+        );
 
         return $this->render('default/index.html.twig',
-            [ 'articles' => $articles, 'test' => $test
-        ]);
+            [ 'articles' => $articles ]);
     }
 
     // article page display only one article with his id
     /**
      * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function vueArticle($id){
-        return $this->render('default/vue.html.twig',['id'=> $id]);
+    // public function vueArticle(ArticleRepository $articleRepository, $id)
+    // ou avec Param converter
+    public function vueArticle(Article $article)
+    {
+//         $article =$articleRepository->find($id);
+        return $this->render('default/vue.html.twig',['article'=> $article]);
+    }
+
+    // article page display only one article with his id
+    /**
+     * @Route("/article/add", name="add_article")
+     */
+    public function addArticle(EntityManagerInterface $manager)
+    {
+        $article = new Article();
+        $article->setTitre("new title");
+        $article->setContent("Contenu de mon article");
+        $article->setCreatedDate(new \DateTime());
+
+        $manager->persist($article);
+        $manager->flush();
     }
 }

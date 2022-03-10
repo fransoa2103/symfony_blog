@@ -1,11 +1,15 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Article n°{{ id }}
+    Article n°{{ article.titre }}
 {% endblock %}
 
 {% block body %}
+
     {%  include 'menu/_menu.html.twig' %}
-    Article n°{{ id }}
-    <p>lorem ipsum</p>
+
+    <h5>Article n°{{ article.id }}</h5>
+    <small>posté le: {{ article.createdDate|date('d/m/Y') }}</small>
+    <p>{{ article.content }}</p>
+
 {% endblock %}
