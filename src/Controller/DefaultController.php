@@ -6,6 +6,10 @@ use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,6 +36,7 @@ class DefaultController extends AbstractController
             [ 'articles' => $articles ]);
     }
 
+
     // article page display only one article with his id
     /**
      * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET"})
@@ -44,18 +49,35 @@ class DefaultController extends AbstractController
         return $this->render('default/vue.html.twig',['article'=> $article]);
     }
 
+
+
     // article page display only one article with his id
     /**
-     * @Route("/article/add", name="add_article")
+     * @Route("/article/ajouter", name="ajouter_article")
      */
-    public function addArticle(EntityManagerInterface $manager)
+    public function ajouter(Request $request)
     {
-        $article = new Article();
-        $article->setTitre("new title");
-        $article->setContent("Contenu de mon article");
-        $article->setCreatedDate(new \DateTime());
+        // dump($request);die;
 
-        $manager->persist($article);
-        $manager->flush();
+        $form = $this->createFormBuilder()
+            ->add('titre', TextType::class,['label'=>"Titre de l'article"])
+            ->add('content', TextareaType::class)
+            ->add('createdDate', DateType::class, ['widget'=>'single_text', 'input' => 'datetime'])
+            ->getForm();
+
+        $form->handleRequest($request);
+        dump($form);die;
+        /*if($form->isSubmitted() && $form->isValid())
+        {
+            $article = new Article();
+            $article->setTitre($form->get('titre')->getData());
+            $article->setContent($form->get('content')->getData());
+            $article->setCreatedDate($form->get('createdDate')->getData());
+            dump($article);die;
+        }*/
+
+
+
+        return $this->render('default/ajouter.html.twig', ['form' => $form->createView()]);
     }
 }

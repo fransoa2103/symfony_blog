@@ -1,0 +1,31 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Ajouter un article {% endblock %}
+
+{% block body %}
+
+    {%  include 'menu/_menu.html.twig' %}
+
+    <p class="fs-5 m-3">Ajouter un nouvel article</p>
+
+    <form class=" border border-light p-5">
+    {{ form_start(form) }}
+        {{ form_errors(form)}}
+        <div class="form-group mb-3">
+            {{ form_label(form.titre, null, {'label_attr': {'class':'form-label'}}) }}
+            {{ form_widget(form.titre, {'label_attr': {'class':'form-control'}}) }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form_label(form.content, null, {'label_attr': {'class':'form-label'}}) }}
+            {{ form_widget(form.content, {'label_attr': {'class':'form-control'}}) }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form_label(form.createdDate, null, {'label_attr': {'class':'form-label'}}) }}
+            {{ form_widget(form.createdDate, {'label_attr': {'class':'form-control'}}) }}
+        </div>
+        {{ form_rest(form)}}
+        <button type="submit" class="btn btn-primary">Valider</button>
+    {{ form_end(form)}}
+    </form>
+
+{% endblock %}
