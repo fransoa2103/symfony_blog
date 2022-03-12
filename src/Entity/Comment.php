@@ -26,6 +26,12 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private $article;
 
+    // For each new comment, we automatically retrieve the current date
+    public function __construct()
+    {
+        $this->dateComment = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

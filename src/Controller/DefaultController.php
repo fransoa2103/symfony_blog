@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Form\ArticleType;
+use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -41,14 +44,36 @@ class DefaultController extends AbstractController
 
     // article page display only one article with his id
     /**
-     * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET"})
+     * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
     // public function vueArticle(ArticleRepository $articleRepository, $id)
-    // ou avec Param converter
-    public function vueArticle(Article $article)
+    // ou Param converter
+    public function vueArticle(Article $article, Request $request, EntityManagerInterface $manager)
     {
-//         $article =$articleRepository->find($id);
-        return $this->render('default/vue.html.twig',['article'=> $article]);
+        $comment = new Comment();
+
+        // get 'id' parameter from $article * on récupère l'id de l'article //
+        $comment->setArticle($article);
+
+        // Form start
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        // Control and register
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $manager->persist($comment);
+            $manager->flush();
+            return $this->redirectToRoute('vue_article', ['id'=>$article->getId()]);
+        }
+
+        // View
+        return $this->render('default/vue.html.twig',
+            [
+                'article'=> $article,
+                'form'=>$form->createView()
+
+            ]);
     }
 
 
