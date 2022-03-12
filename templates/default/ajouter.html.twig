@@ -8,20 +8,23 @@
 
     {{ form_start(form) }}
         {{ form_errors(form)}}
-        <div class="form-group mb-3">
-            {{ form_label(form.titre, null, {'label_attr': {'class':'form-label'}}) }}
-            {{ form_widget(form.titre, {'label_attr': {'class':'form-control'}}) }}
-        </div>
-        <div class="form-group mb-3">
-            {{ form_label(form.content, null, {'label_attr': {'class':'form-label'}}) }}
-            {{ form_widget(form.content, {'label_attr': {'class':'form-control'}}) }}
-        </div>
-        <div class="form-group mb-3">
-            {{ form_label(form.createdDate, null, {'label_attr': {'class':'form-label'}}) }}
-            {{ form_widget(form.createdDate, {'label_attr': {'class':'form-control'}}) }}
-        </div>
+            <div class="p-1 mb-1">
+                    {{ form_label(form.titre, null, {'label_attr': {'class':'form-label'}}) }}
+                    {{ form_widget(form.titre, {'label_attr': {'class':'form-control'}}) }}
+            </div>
+            <div class="p-1 mb-1">
+                    {{ form_label(form.content, null, {'label_attr': {'class':'form-label'}}) }}
+                    {{ form_widget(form.content, {'attr': {'class':'form-control'}}) }}
+            </div>
+            <div class="p-1 mb-1">
+                    {{ form_label(form.createdDate, null, {'label_attr': {'class':'form-label'}}) }}
+                    {{ form_widget(form.createdDate, {'attr': {'class':'form-control'}}) }}
+            </div>
+            <div class="p-1 mb-1">
+                    {{ form_label(form.categories, null, {'label_attr': {'class':'form-label'}}) }}
+                    {{ form_widget(form.categories, {'attr': {'class':'form-control'}}) }}
+            </div>
         {{ form_rest(form)}}
         <button type="submit" class="btn btn-primary">Valider</button>
     {{ form_end(form)}}
-
 {% endblock %}

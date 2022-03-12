@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,36 +57,24 @@ class DefaultController extends AbstractController
     /**
      * @Route("/article/ajouter", name="ajouter_article")
      */
-    public function ajouter(Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $manager)
+    public function ajouter(Request $request, EntityManagerInterface $manager)
     {
         // dump($request);die;
 
-        $form = $this->createFormBuilder()
-            ->add('titre', TextType::class,['label'=>"Titre de l'article"])
-            ->add('content', TextareaType::class)
-            ->add('createdDate', DateType::class, ['widget'=>'single_text', 'input' => 'datetime'])
-            // ->setMethod('POST')
-            ->getForm();
+        $article = new Article();
+
+        $form = $this->createForm(ArticleType::class, $article);
+
         $form->handleRequest($request);
 
         // dump($request);die;
         if($form->isSubmitted() && $form->isValid())
         {
-            $article = new Article();
-            $article->setTitre($form->get('titre')->getData());
-            $article->setContent($form->get('content')->getData());
-            $article->setCreatedDate($form->get('createdDate')->getData());
-            // add Category
-            $category = $categoryRepository->findOneBy(['name'=>'Sport']);
-            $article->addCategory($category);
-
+            // dump($article); die();
             $manager->persist($article);
             $manager->flush();
-
             return $this->redirectToRoute('liste_articles');
         }
-
-
 
         return $this->render('default/ajouter.html.twig', ['form' => $form->createView()]);
     }
