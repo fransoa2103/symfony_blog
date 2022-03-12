@@ -6,8 +6,6 @@
 
 {% block body %}
 
-    {%  include 'menu/_menu.html.twig' %}
-
     <p class="display-1 mb-3">Article n°{{ article.id }}</p>
     <small>posté le: {{ article.createdDate|date('d/m/Y') }}</small>
     <p>{{ article.content }}</p>

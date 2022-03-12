@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -55,7 +56,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/article/ajouter", name="ajouter_article")
      */
-    public function ajouter(Request $request)
+    public function ajouter(Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $manager)
     {
         // dump($request);die;
 
@@ -63,18 +64,26 @@ class DefaultController extends AbstractController
             ->add('titre', TextType::class,['label'=>"Titre de l'article"])
             ->add('content', TextareaType::class)
             ->add('createdDate', DateType::class, ['widget'=>'single_text', 'input' => 'datetime'])
+            // ->setMethod('POST')
             ->getForm();
-
         $form->handleRequest($request);
-        dump($form);die;
-        /*if($form->isSubmitted() && $form->isValid())
+
+        // dump($request);die;
+        if($form->isSubmitted() && $form->isValid())
         {
             $article = new Article();
             $article->setTitre($form->get('titre')->getData());
             $article->setContent($form->get('content')->getData());
             $article->setCreatedDate($form->get('createdDate')->getData());
-            dump($article);die;
-        }*/
+            // add Category
+            $category = $categoryRepository->findOneBy(['name'=>'Sport']);
+            $article->addCategory($category);
+
+            $manager->persist($article);
+            $manager->flush();
+
+            return $this->redirectToRoute('liste_articles');
+        }
 
 
 
