@@ -10,7 +10,8 @@ class CommentFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for($i = 1; $i<=10; $i++) {
+        // EXAMPLE
+        /* for($i = 1; $i<=10; $i++) {
             $comment = new Comment();
             $comment->setContenu("commentaire de mon article n°");
             $comment->setAuthor("François CB");
@@ -21,8 +22,9 @@ class CommentFixtures extends Fixture
             $manager->persist($comment);
         }
         $manager->flush();
+        */
     }
-    // Appel la Class Article avant la création d'un commentaire pour récupérer l'id de l'article
+    // Appelle la Class Article avant la création d'un commentaire pour récupérer l'id de l'article
     // To get article id, Call Article Class before create a comment then get article Id
     public function getDependencies()
     {
