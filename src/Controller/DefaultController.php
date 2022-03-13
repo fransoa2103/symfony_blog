@@ -2,15 +2,23 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use App\Entity\Article;
+use App\Entity\Category;
 use App\Entity\Comment;
+
 use App\Form\ArticleType;
+use App\Form\CategoryType;
 use App\Form\CommentType;
+
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+
+
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,14 +36,6 @@ class DefaultController extends AbstractController
     public function listeArticles(ArticleRepository $articleRepository): Response
     {
         $articles = $articleRepository->findAll();
-
-
-        /* $articles = $articleRepository->findBy
-        (
-            ['titre'        => "article n°1"],
-            ['createdDate'  => 'DESC']
-        );
-        */
 
         return $this->render('default/index.html.twig',
             [ 'articles' => $articles ]);
@@ -76,8 +76,6 @@ class DefaultController extends AbstractController
             ]);
     }
 
-
-
     // article page display only one article with his id
     /**
      * @Route("/article/ajouter", name="ajouter_article")
@@ -102,5 +100,34 @@ class DefaultController extends AbstractController
         }
 
         return $this->render('default/ajouter.html.twig', ['form' => $form->createView()]);
+    }
+
+    // list Categories
+    /**
+     * @Route("/categories", name="liste_categories", methods={"GET", "POST"})
+     */
+    public function listeCategories(CategoryRepository $categorieRepository, EntityManagerInterface $manager, Request $request)
+    {
+        $categories = $categorieRepository->findAll();
+
+        $categorie = new Category();
+
+        // Form start
+        $form = $this->createForm(CategoryType::class, $categorie);
+        $form->handleRequest($request);
+
+        // Control and register
+        if($form->isSubmitted() && $form->isValid())
+        {
+            //dump($categorie); die;
+            $manager->persist($categorie);
+            $manager->flush();
+            return $this->redirectToRoute('liste_categories');
+        }
+
+        // View
+        return $this->render('default/categories.html.twig',
+            [ 'categories' => $categories,
+                'form'=>$form->createView() ]);
     }
 }

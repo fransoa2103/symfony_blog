@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des categories{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des categories existantes</h1>
+
+    <ul>
+        {% for categorie in categories %}
+            <li>{{ categorie.name }}</li>
+        {% endfor %}
+    </ul>
+
+    {{ form_start(form) }}
+        {{ form_errors(form)}}
+
+        {{ form_label(form.name, null, {'label_attr':{'class':'form-label'}}) }}
+        {{ form_widget(form.name, {'attr':{'class':'form-control'}}) }}
+
+        {{ form_rest(form) }}
+        <button type submit class="btn btn-primary mt-2">valider</button>
+    {{ form_end(form) }}
+
+{% endblock %}
