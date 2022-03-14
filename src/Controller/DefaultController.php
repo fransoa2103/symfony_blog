@@ -15,15 +15,10 @@ use App\Form\CommentType;
 
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
-use App\Repository\CommentRepository;
-
-
-
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Service\VerifComment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
@@ -48,8 +43,15 @@ class DefaultController extends AbstractController
      */
     // public function vueArticle(ArticleRepository $articleRepository, $id)
     // ou Param converter
-    public function vueArticle(Article $article, Request $request, EntityManagerInterface $manager)
+    public function vueArticle  (   Article $article,
+                                    Request $request,
+                                    EntityManagerInterface $manager,
+                                    VerifComment $verifWord,
+                                    FlashBagInterface $session   
+                                )
     {
+
+        
         $comment = new Comment();
 
         // get 'id' parameter from $article * on récupère l'id de l'article //
@@ -62,9 +64,17 @@ class DefaultController extends AbstractController
         // Control and register
         if($form->isSubmitted() && $form->isValid())
         {
-            $manager->persist($comment);
-            $manager->flush();
-            return $this->redirectToRoute('vue_article', ['id'=>$article->getId()]);
+            // control bad words
+            if ($verifWord->authorizedComment($comment) === false)
+            {
+                $manager->persist($comment);
+                $manager->flush();
+                return $this->redirectToRoute('vue_article', ['id'=>$article->getId()]);
+            }
+            else
+            {
+                // $session->add("error", "le contenu de votre commentaire est incorrect!");
+            }
         }
 
         // View
@@ -72,7 +82,6 @@ class DefaultController extends AbstractController
             [
                 'article'=> $article,
                 'form'=>$form->createView()
-
             ]);
     }
 
