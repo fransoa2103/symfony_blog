@@ -18,7 +18,6 @@ use App\Repository\CategoryRepository;
 use App\Service\VerifComment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
@@ -47,7 +46,6 @@ class DefaultController extends AbstractController
                                     Request $request,
                                     EntityManagerInterface $manager,
                                     VerifComment $verifWord,
-                                    FlashBagInterface $session   
                                 )
     {
 
@@ -73,7 +71,10 @@ class DefaultController extends AbstractController
             }
             else
             {
-                // $session->add("error", "le contenu de votre commentaire est incorrect!");
+                $this->addFlash(
+                    'notice',
+                    'your content don\'t respect the author, please rewrite your comment!'
+                );
             }
         }
 
