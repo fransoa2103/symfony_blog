@@ -86,26 +86,21 @@ class DefaultController extends AbstractController
             ]);
     }
 
-    // article page display only one article with his id
+    
     /**
      * @Route("/article/ajouter", name="ajouter_article")
+     * @Route("/article/{id}/edit", name="edit_article",requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
-    public function ajouter(Request $request, EntityManagerInterface $manager)
+    public function ajouter(Article $article = null, Request $request, EntityManagerInterface $manager)
     {
-        // dump($request);die;
-
-        $article = new Article();
+        $article === null ? $article = new Article() : null;
 
         $form = $this->createForm(ArticleType::class, $article);
-
         $form->handleRequest($request);
 
-        // dump($request);die;
         if($form->isSubmitted() && $form->isValid())
         {
-            // dump($article); die();
-            $manager->persist($article);
-            $manager->flush();
+            if($manager->persist($article)===null){$manager->flush();}
             return $this->redirectToRoute('liste_articles');
         }
 
