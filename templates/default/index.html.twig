@@ -4,7 +4,15 @@
 
 {% block body %}
 
-    <h1>Liste des articles</h1>
+    
+    <h3>
+        Liste des {% count(articles) %} articles
+        {% if draft %}
+            en mode brouillon
+        {% else %}
+            publiés
+        {% endif %}
+    </h3>
 
        <ul>
         {% for article in articles %}

@@ -6,8 +6,9 @@
 
 {% block body %}
 
-    <p class="display-1 mb-3">Article n°{{ article.id }}</p>
-    <small>posté le: {{ article.createdDate|date('d/m/Y') }}</small>
+    <p class="fs-5 mb-3">Article n°{{ article.id }} / {{ article.titre }}</p>
+    <a href="{{ path('edit_article', { 'id':article.id }) }}" class="btn btn-info me-2">Modifier votre article</a>
+    <small> posté le: {{ article.createdDate|date('d/m/Y') }}</small>
     <p>{{ article.content }}</p>
     <div class="row">
         <h6>Voici les Commentaires</h6>

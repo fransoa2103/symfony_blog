@@ -27,7 +27,7 @@ class ArticleType extends AbstractType
                     'by_reference' => false
                 ])
             ->add('draft', SubmitType::class, ['label'=>'draft'])
-            ->add('publish', SubmitType::class, ['label'=>'publish'])
+            ->add('publish', SubmitType::class, ['label'=>'To publish'])
         ;
     }
 

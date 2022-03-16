@@ -30,19 +30,23 @@ class DefaultController extends AbstractController
      */
     public function listeArticles(ArticleRepository $articleRepository): Response
     {
-        $articles = $articleRepository->findAll();
+        $articles = $articleRepository->findBy(['state'=>'publish']);
 
         return $this->render('default/index.html.twig',
-            [ 'articles' => $articles ]);
+            [
+                'articles' => $articles,
+                'draft' => false,
+
+            ]);
     }
 
 
     // article page display only one article with his id
+    // public function vueArticle(ArticleRepository $articleRepository, $id) equal (Article $article) because it's a Param converter
+
     /**
      * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
-    // public function vueArticle(ArticleRepository $articleRepository, $id)
-    // ou Param converter
     public function vueArticle  (   Article $article,
                                     Request $request,
                                     EntityManagerInterface $manager,
@@ -101,7 +105,14 @@ class DefaultController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            dump($form->get('draft')->isClicked()); die;
+            if($form->get('draft')->isClicked())
+            {
+                $article->setState('draft');
+            }
+            else
+            {
+                $article->setState('to publish');
+            }
 
             if($manager->persist($article)===null){$manager->flush();}
             return $this->redirectToRoute('liste_articles');
@@ -138,4 +149,20 @@ class DefaultController extends AbstractController
             [ 'categories' => $categories,
                 'form'=>$form->createView() ]);
     }
+ 
+    /**
+     * @Route("/article/draft", name="liste_draft")
+     */
+    public function listeArticlesDraft(ArticleRepository $articleRepository): Response
+    {
+        $articles = $articleRepository->findBy(['state'=>'draft']);
+
+        return $this->render('default/index.html.twig',
+            [
+                'articles' => $articles,
+                'draft' => true,
+
+            ]);
+    }
+
 }

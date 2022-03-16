@@ -17,7 +17,7 @@ class ArticleFixtures extends Fixture
         $faker = Faker\Factory::create('fr_FR');
 
         $state = ['draft','publish'];
-        // Create 5 categories
+        // Create 3 categories
         for($i = 1; $i<=3; $i++)
         {
             $category = new Category();
