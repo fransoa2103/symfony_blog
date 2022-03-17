@@ -111,11 +111,14 @@ class DefaultController extends AbstractController
                 $article->setState('to publish');
             }
 
-            if($manager->persist($article)===null){$manager->flush();}
+            if( $manager->persist($article) === null){ $manager->flush(); }
             return $this->redirectToRoute('liste_articles');
         }
 
-        return $this->render('default/ajouter.html.twig', ['form' => $form->createView()]);
+        return $this->render('default/ajouter.html.twig', [
+            'form' => $form->createView(),
+            'article' => $article
+        ]);
     }
 
     // list Categories

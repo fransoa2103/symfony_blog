@@ -4,13 +4,20 @@
 
 {% block body %}
 
-    <p class="fs-5 m-3">Ajouter un nouvel article</p>
+    <p class="fs-5 mt-3">
+        {% if (article.id == null) %}
+            Ajouter un nouvel article
+        {% else %}
+            Modifiez votre article
+        {% endif %}
+    </p>
 
-    {{ form_start(form) }}
-        {{ form_errors(form)}}
+    {{ form_start(form)}}
+
             <div class="p-1 mb-1">
                     {{ form_label(form.titre, null, {'label_attr': {'class':'form-label'}}) }}
                     {{ form_widget(form.titre, {'label_attr': {'class':'form-control'}}) }}
+                    <div class="invalid-feedback">{{ form_errors(form.titre)}}</div>
             </div>
             <div class="p-1 mb-1">
                     {{ form_label(form.content, null, {'label_attr': {'class':'form-label'}}) }}
