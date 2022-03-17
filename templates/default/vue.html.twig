@@ -7,7 +7,11 @@
 {% block body %}
 
     <p class="fs-5 mb-3">Article n°{{ article.id }} / {{ article.titre }}</p>
-    <a href="{{ path('edit_article', { 'id':article.id }) }}" class="btn btn-info me-2">Modifier votre article</a>
+
+    {% if is_granted('ROLE_ADMIN')%}
+        <a href="{{ path('edit_article', { 'id':article.id }) }}" class="btn btn-info me-2">Modifier votre article</a>
+    {% endif %}
+    
     <small> posté le: {{ article.createdDate|date('d/m/Y') }}</small>
     <p>{{ article.content }}</p>
     <div class="row">

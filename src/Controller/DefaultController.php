@@ -24,10 +24,12 @@ use Symfony\Component\Form;
 class DefaultController extends AbstractController
 
 {
-    /**
+    /** *********************************************************************************************************
+     *
      * list articles = default page
      * @Route("/", name="liste_articles", methods={"GET"})
-     */
+     * 
+    ********************************************************************************************************** */
 
     public function listeArticles(ArticleRepository $articleRepository): Response
     {
@@ -41,12 +43,15 @@ class DefaultController extends AbstractController
     }
 
 
-    // article page display only one article with his id
-    // public function vueArticle(ArticleRepository $articleRepository, $id) equal (Article $article) because it's a Param converter
+    /** ********************************************************************************************************
+    *
+    * article page display only one article with his id
+    * public function vueArticle(ArticleRepository $articleRepository, $id) equal (Article $article) because it's a Param converter
+    *
+    * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET", "POST"})
+    *
+    ********************************************************************************************************** */
 
-    /**
-     * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET", "POST"})
-     */
     public function vueArticle  (   Article $article,
                                     Request $request,
                                     EntityManagerInterface $manager,
@@ -87,44 +92,20 @@ class DefaultController extends AbstractController
                 'form'=>$form->createView()
             ]);
     }
+    
+
 
     
-    /**
-     * @Route("/article/ajouter", name="ajouter_article")
-     * @Route("/article/{id}/edit", name="edit_article",requirements={"id"="\d+"}, methods={"GET", "POST"})
-     */
-    public function ajouter(Article $article = null, Request $request, EntityManagerInterface $manager)
-    {
-        $article === null ? $article = new Article() : null;
 
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
-        {
-            if($form->get('draft')->isClicked())
-            {
-                $article->setState('draft');
-            }
-            else
-            {
-                $article->setState('to publish');
-            }
-
-            if( $manager->persist($article) === null){ $manager->flush(); }
-            return $this->redirectToRoute('liste_articles');
-        }
-
-        return $this->render('default/ajouter.html.twig', [
-            'form' => $form->createView(),
-            'article' => $article
-        ]);
-    }
-
-    // list Categories
-    /**
+    /** *********************************************************************************************************
+     *
+     * list Categories
+     *
      * @Route("/categories", name="liste_categories", methods={"GET", "POST"})
-     */
+     * 
+     * ********************************************************************************************************* */
+
     public function listeCategories(CategoryRepository $categorieRepository, EntityManagerInterface $manager, Request $request)
     {
         $categories = $categorieRepository->findAll();
@@ -149,20 +130,4 @@ class DefaultController extends AbstractController
             [ 'categories' => $categories,
                 'form'=>$form->createView() ]);
     }
- 
-    /**
-     * @Route("/article/draft", name="liste_draft")
-     */
-    public function listeArticlesDraft(ArticleRepository $articleRepository): Response
-    {
-        $articles = $articleRepository->findBy(['state'=>'draft']);
-
-        return $this->render('default/index.html.twig',
-            [
-                'articles' => $articles,
-                'draft' => true,
-
-            ]);
-    }
-
-}
+ }
