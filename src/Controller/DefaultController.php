@@ -24,19 +24,19 @@ use Symfony\Component\Form;
 class DefaultController extends AbstractController
 
 {
-    // list articles = default page
     /**
+     * list articles = default page
      * @Route("/", name="liste_articles", methods={"GET"})
      */
+
     public function listeArticles(ArticleRepository $articleRepository): Response
     {
         $articles = $articleRepository->findBy(['state'=>'publish']);
 
         return $this->render('default/index.html.twig',
             [
-                'articles' => $articles,
-                'draft' => false,
-
+                'articles'      => $articles,
+                'draft'         => false
             ]);
     }
 
@@ -50,11 +50,8 @@ class DefaultController extends AbstractController
     public function vueArticle  (   Article $article,
                                     Request $request,
                                     EntityManagerInterface $manager,
-                                    VerifComment $verifWord,
-                                )
+                                    VerifComment $verifWord )
     {
-
-        
         $comment = new Comment();
 
         // get 'id' parameter from $article * on récupère l'id de l'article //
